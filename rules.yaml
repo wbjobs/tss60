@@ -1,0 +1,46 @@
+alert_log: /var/log/watchfile_alerts.log
+
+rules:
+  - name: nginx_access_etc_passwd
+    description: "nginx 进程尝试读取 /etc/passwd"
+    comm: "nginx"
+    path: "/etc/passwd"
+    mode: "RD"
+    severity: "critical"
+    message: "Suspicious: nginx accessing /etc/passwd"
+
+  - name: any_process_root_write
+    description: "任何进程在 /root 目录下创建/写入文件"
+    comm: ""
+    path: "/root/"
+    mode: "WR"
+    severity: "critical"
+    message: "Suspicious write to /root directory"
+
+  - name: cron_config_modification
+    description: "crontab 配置被修改"
+    path_contains: "/etc/cron"
+    mode: "WR"
+    severity: "high"
+    message: "Cron configuration modified"
+
+  - name: shadow_file_access
+    description: "任何进程访问 /etc/shadow"
+    path: "/etc/shadow"
+    severity: "critical"
+    message: "Access to /etc/shadow detected"
+
+  - name: ssh_key_access
+    description: "进程访问 SSH 私钥文件"
+    path_contains: ".ssh/id_"
+    mode: "RD"
+    severity: "high"
+    message: "SSH private key access detected"
+
+  - name: suspicious_tmp_exec
+    description: "在 /tmp 目录下写入可执行文件"
+    path: "/tmp/"
+    path_contains: "."
+    mode: "WR"
+    severity: "medium"
+    message: "File write to /tmp directory"
