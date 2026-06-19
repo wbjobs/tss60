@@ -32,3 +32,13 @@ __pycache__/
 # Env
 .env
 .env.local
+
+# Go
+watchfile
+*.exe
+
+# Generated eBPF
+bpf_bpfel.go
+bpf_bpfeb.go
+bpf_bpfel.o
+bpf_bpfeb.o
