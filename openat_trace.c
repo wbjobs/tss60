@@ -5,9 +5,13 @@
 #define __NR_openat 257
 #endif
 
+#ifndef BPF_RB_NO_WAKEUP
+#define BPF_RB_NO_WAKEUP (1ULL << 0)
+#endif
+
 struct {
     __uint(type, BPF_MAP_TYPE_RINGBUF);
-    __uint(max_entries, 256 * 1024);
+    __uint(max_entries, 8 * 1024 * 1024);
 } events SEC(".maps");
 
 SEC("tracepoint/raw_syscalls/sys_enter")
@@ -31,7 +35,7 @@ int trace_openat(struct sys_enter_ctx *ctx)
 
     e->flags = (__s32)ctx->args[2];
 
-    bpf_ringbuf_submit(e, 0);
+    bpf_ringbuf_submit(e, BPF_RB_NO_WAKEUP);
     return 0;
 }
 
